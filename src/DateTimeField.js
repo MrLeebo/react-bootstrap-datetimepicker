@@ -85,7 +85,8 @@ export default class DateTimeField extends Component {
 
   onChange = (event) => {
     const value = event.target == null ? event : event.target.value;
-    if (moment(value, this.state.inputFormat, true).isValid()) {
+    const isValueValid = moment(value, this.state.inputFormat, true).isValid();
+    if (isValueValid) {
       this.setState({
         selectedDate: moment(value, this.state.inputFormat, true),
         viewDate: moment(value, this.state.inputFormat, true).startOf("month")
@@ -95,7 +96,8 @@ export default class DateTimeField extends Component {
     return this.setState({
       inputValue: value
     }, function() {
-      return this.props.onChange(moment(this.state.inputValue, this.state.inputFormat, true).format(this.props.format), value);
+      const formattedValue = isValueValid ? moment(this.state.inputValue, this.state.inputFormat, true).format(this.props.format) : '';
+      return this.props.onChange(formattedValue, value);
     });
 
   }
