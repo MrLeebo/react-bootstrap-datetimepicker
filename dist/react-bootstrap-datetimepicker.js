@@ -569,7 +569,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "propTypes",
 	    value: {
-	      dateTime: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]),
+	      dateTime: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number, _react.PropTypes.instanceOf(_moment2["default"])]),
 	      onChange: _react.PropTypes.func,
 	      format: _react.PropTypes.string,
 	      inputProps: _react.PropTypes.object,
