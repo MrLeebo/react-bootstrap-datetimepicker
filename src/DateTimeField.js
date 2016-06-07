@@ -34,7 +34,8 @@ export default class DateTimeField extends Component {
   static propTypes = {
     dateTime: PropTypes.oneOfType([
       PropTypes.string,
-      PropTypes.number
+      PropTypes.number,
+      PropTypes.instanceOf(moment)
     ]),
     onChange: PropTypes.func,
     format: PropTypes.string,
