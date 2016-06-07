@@ -156,7 +156,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    this.onChange = function (event) {
 	      var value = event.target == null ? event : event.target.value;
-	      if ((0, _moment2["default"])(value, _this.state.inputFormat, true).isValid()) {
+	      var isValueValid = (0, _moment2["default"])(value, _this.state.inputFormat, true).isValid();
+	      if (isValueValid) {
 	        _this.setState({
 	          selectedDate: (0, _moment2["default"])(value, _this.state.inputFormat, true),
 	          viewDate: (0, _moment2["default"])(value, _this.state.inputFormat, true).startOf("month")
@@ -166,7 +167,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return _this.setState({
 	        inputValue: value
 	      }, function () {
-	        return this.props.onChange((0, _moment2["default"])(this.state.inputValue, this.state.inputFormat, true).format(this.props.format), value);
+	        var formattedValue = isValueValid ? (0, _moment2["default"])(this.state.inputValue, this.state.inputFormat, true).format(this.props.format) : '';
+	        return this.props.onChange(formattedValue, value);
 	      });
 	    };
 
