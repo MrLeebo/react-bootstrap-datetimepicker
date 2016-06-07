@@ -7,13 +7,14 @@ jest.dontMock("../DateTimePickerMonths.js");
 describe("DateTimePickerMonths", function() {
   const moment = require("moment");
   const DateTimePickerMonths = require("../DateTimePickerMonths.js");
-  let subtractYearMock, addYearMock, setViewMonthMock, showYearsMock, months;
+  let subtractYearMock, addYearMock, setViewMonthMock, setSelectedMonthMock, showYearsMock, months;
 
   beforeEach(() => {
     subtractYearMock = jest.genMockFunction();
     addYearMock = jest.genMockFunction();
     showYearsMock = jest.genMockFunction();
     setViewMonthMock = jest.genMockFunction();
+    setSelectedMonthMock = jest.genMockFunction();
     months = TestUtils.renderIntoDocument(
       <DateTimePickerMonths
         addYear={addYearMock}
@@ -22,6 +23,8 @@ describe("DateTimePickerMonths", function() {
         showYears={showYearsMock}
         subtractYear={subtractYearMock}
         viewDate={moment()}
+        setSelectedMonth={setSelectedMonthMock}
+        mode={"date"}
        />
     );
   });
@@ -50,6 +53,27 @@ describe("DateTimePickerMonths", function() {
        TestUtils.Simulate.click(month);
        expect(setViewMonthMock.mock.calls.length).toBe(1);
       });
+
+     describe("when the date picker mode is set to month picker", function() {
+       it("calls setSelectedMonth when clicking a month", function() {
+         months = TestUtils.renderIntoDocument(
+           <DateTimePickerMonths
+             addYear={addYearMock}
+             selectedDate={moment()}
+             setViewMonth={setViewMonthMock}
+             showYears={showYearsMock}
+             subtractYear={subtractYearMock}
+             viewDate={moment()}
+             setSelectedMonth={setSelectedMonthMock}
+             mode={"month"}
+           />
+         );
+
+         const month = TestUtils.findRenderedDOMComponentWithClass(months, "active");
+         TestUtils.Simulate.click(month);
+         expect(setSelectedMonthMock.mock.calls.length).toBe(1);
+        });
+     });
   });
 
   describe("UI", function() {
@@ -77,6 +101,8 @@ describe("DateTimePickerMonths", function() {
           showYears={showYearsMock}
           subtractYear={subtractYearMock}
           viewDate={moment().add(2, "year")}
+          setSelectedMonth={setSelectedMonthMock}
+          mode={"date"}
          />
       );
       const active = TestUtils.scryRenderedDOMComponentsWithClass(months, "active");

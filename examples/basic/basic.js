@@ -50,15 +50,15 @@ class Basic extends Component {
                 </pre>
               </div>
             </div>
-              <div className="row">
-                <div className="col-xs-12">
-                  Example with default Text
-                  <DateTimeField
-                    defaultText="Please select a date"
-                  />
-                  <pre> {'<DateTimeField defaultText="Please select a date" />'} </pre>
-                </div>
+            <div className="row">
+              <div className="col-xs-12">
+                Example with default Text
+                <DateTimeField
+                  defaultText="Please select a date"
+                />
+                <pre> {'<DateTimeField defaultText="Please select a date" />'} </pre>
               </div>
+            </div>
             <div className="row">
 							<div className="col-xs-12">
 								Default Basic Example
@@ -102,26 +102,35 @@ class Basic extends Component {
                   maxDate={moment().add(1, "days")}
                   minDate={moment().subtract(1, "days")}
                 />
-                <pre> {'<DateTimeField daysOfWeekDisabled={[0,1,2]} />'} </pre>
-
+                <pre> {'<DateTimeField maxDate={moment().add(1, "days")}\n' +
+                'minDate={moment().subtract(1, "days")} />'} </pre>
               </div>
 						</div>
             <div className="row">
               <div className="col-xs-12">
-                  just time picker
-                  <DateTimeField
-                      mode="time"
-                      />
-                  <pre> {'<DateTimeField mode="time" />'} </pre>
+                just time picker
+                <DateTimeField
+                  mode="time"
+                />
+                <pre> {'<DateTimeField mode="time" />'} </pre>
               </div>
             </div>
             <div className="row">
               <div className="col-xs-12">
-                  just date picker
-                  <DateTimeField
-                      mode="date"
-                      />
-                  <pre> {'<DateTimeField mode="date" />'} </pre>
+                just date picker
+                <DateTimeField
+                  mode="date"
+                />
+                <pre> {'<DateTimeField mode="date" />'} </pre>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-xs-12">
+                just month picker
+                <DateTimeField
+                  mode="month"
+                />
+                <pre> {'<DateTimeField mode="month" />'} </pre>
               </div>
             </div>
           </div>

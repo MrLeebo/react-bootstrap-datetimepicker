@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import DateTimePickerDays from "./DateTimePickerDays";
 import DateTimePickerMonths from "./DateTimePickerMonths";
 import DateTimePickerYears from "./DateTimePickerYears";
+import Constants from "./Constants.js";
 
 export default class DateTimePickerDate extends Component {
   static propTypes = {
@@ -14,7 +15,9 @@ export default class DateTimePickerDate extends Component {
       PropTypes.string,
       PropTypes.number
     ]),
+    mode: PropTypes.oneOf([Constants.MODE_DATE, Constants.MODE_MONTH, Constants.MODE_DATETIME]),
     daysOfWeekDisabled: PropTypes.array,
+    setSelectedMonth: PropTypes.func.isRequired,
     setSelectedDate: PropTypes.func.isRequired,
     subtractYear: PropTypes.func.isRequired,
     addYear: PropTypes.func.isRequired,
@@ -23,7 +26,8 @@ export default class DateTimePickerDate extends Component {
     addDecade: PropTypes.func.isRequired,
     subtractDecade: PropTypes.func.isRequired,
     minDate: PropTypes.object,
-    maxDate: PropTypes.object
+    maxDate: PropTypes.object,
+    calculatePosition: PropTypes.func
   }
 
   constructor(props) {
@@ -46,6 +50,9 @@ export default class DateTimePickerDate extends Component {
       }
     };
     this.state = viewModes[this.props.viewMode] || viewModes[Object.keys(viewModes)[this.props.viewMode]] || viewModes.days;
+    if (this.state.daysDisplayed && this.props.mode === Constants.MODE_MONTH) {
+      this.state = viewModes.months;
+    }
   }
 
   showMonths = () => {
@@ -78,6 +85,19 @@ export default class DateTimePickerDate extends Component {
     });
   }
 
+  componentWillUpdate = (nextProps, newState) => {
+    this.shouldCalculatePosition = false;
+    if(newState.monthsDisplayed !== this.state.monthsDisplayed || newState.yearsDisplayed !== this.state.yearsDisplayed || newState.daysDisplayed !== this.state.daysDisplayed ) {
+       this.shouldCalculatePosition = true;
+    }
+  }
+
+  componentDidUpdate = () => {
+    if(this.shouldCalculatePosition) {
+      this.props.calculatePosition({monthsDisplayed: this.state.monthsDisplayed, yearsDisplayed: this.state.yearsDisplayed, daysDisplayed: this.state.daysDisplayed});
+    }
+  }
+
   renderDays = () => {
     if (this.state.daysDisplayed) {
       return (
@@ -105,10 +125,12 @@ export default class DateTimePickerDate extends Component {
       <DateTimePickerMonths
             addYear={this.props.addYear}
             selectedDate={this.props.selectedDate}
+            setSelectedMonth={this.props.setSelectedMonth}
             setViewMonth={this.setViewMonth}
             showYears={this.showYears}
             subtractYear={this.props.subtractYear}
             viewDate={this.props.viewDate}
+            mode={this.props.mode}
       />
       );
     } else {
@@ -144,4 +166,3 @@ export default class DateTimePickerDate extends Component {
     );
   }
 }
-

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import classnames from "classnames";
 import moment from "moment";
+import Constants from "./Constants.js";
 
 export default class DateTimePickerMonths extends Component {
   static propTypes = {
@@ -9,11 +10,14 @@ export default class DateTimePickerMonths extends Component {
     viewDate: PropTypes.object.isRequired,
     selectedDate: PropTypes.object.isRequired,
     showYears: PropTypes.func.isRequired,
-    setViewMonth: PropTypes.func.isRequired
+    setViewMonth: PropTypes.func.isRequired,
+    setSelectedMonth: PropTypes.func.isRequired,
+    mode: PropTypes.oneOf([Constants.MODE_DATE, Constants.MODE_MONTH, Constants.MODE_DATETIME])
   }
 
   renderMonths = () => {
     var classes, i, month, months, monthsShort;
+    const onClick = this.props.mode === Constants.MODE_MONTH ? this.props.setSelectedMonth : this.props.setViewMonth;
     month = this.props.selectedDate.month();
     monthsShort = moment.monthsShort();
     i = 0;
@@ -23,7 +27,7 @@ export default class DateTimePickerMonths extends Component {
         month: true,
         "active": i === month && this.props.viewDate.year() === this.props.selectedDate.year()
       };
-      months.push(<span className={classnames(classes)} key={i} onClick={this.props.setViewMonth}>{monthsShort[i]}</span>);
+      months.push(<span className={classnames(classes)} key={i} onClick={onClick}>{monthsShort[i]}</span>);
       i++;
     }
     return months;
@@ -35,11 +39,11 @@ export default class DateTimePickerMonths extends Component {
           <table className="table-condensed">
             <thead>
               <tr>
-                <th className="prev" onClick={this.props.subtractYear}>‹</th>
+                <th className="prev" onClick={this.props.subtractYear}><span className="glyphicon glyphicon-chevron-left" /></th>
 
                 <th className="switch" colSpan="5" onClick={this.props.showYears}>{this.props.viewDate.year()}</th>
 
-                <th className="next" onClick={this.props.addYear}>›</th>
+                <th className="next" onClick={this.props.addYear}><span className="glyphicon glyphicon-chevron-right" /></th>
               </tr>
             </thead>
 
@@ -53,4 +57,3 @@ export default class DateTimePickerMonths extends Component {
     );
   }
 }
-

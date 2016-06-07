@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from "react";
-import classnames from "classnames";
+import classNames from "classnames";
 import DateTimePickerDate from "./DateTimePickerDate.js";
 import DateTimePickerTime from "./DateTimePickerTime.js";
 import Constants from "./Constants.js";
@@ -17,8 +17,9 @@ export default class DateTimePicker extends Component {
       PropTypes.string,
       PropTypes.number
     ]),
-    mode: PropTypes.oneOf([Constants.MODE_DATE, Constants.MODE_DATETIME, Constants.MODE_TIME]),
+    mode: PropTypes.oneOf([Constants.MODE_DATE, Constants.MODE_MONTH, Constants.MODE_DATETIME, Constants.MODE_TIME]),
     daysOfWeekDisabled: PropTypes.array,
+    setSelectedMonth: PropTypes.func.isRequired,
     setSelectedDate: PropTypes.func.isRequired,
     subtractYear: PropTypes.func.isRequired,
     addYear: PropTypes.func.isRequired,
@@ -37,7 +38,9 @@ export default class DateTimePicker extends Component {
     widgetStyle: PropTypes.object,
     togglePicker: PropTypes.func,
     setSelectedHour: PropTypes.func,
-    setSelectedMinute: PropTypes.func
+    setSelectedMinute: PropTypes.func,
+    setToday: PropTypes.func,
+    calculatePosition: PropTypes.func
   }
 
   renderDatePicker = () => {
@@ -52,6 +55,7 @@ export default class DateTimePicker extends Component {
               maxDate={this.props.maxDate}
               minDate={this.props.minDate}
               selectedDate={this.props.selectedDate}
+              setSelectedMonth={this.props.setSelectedMonth}
               setSelectedDate={this.props.setSelectedDate}
               setViewMonth={this.props.setViewMonth}
               setViewYear={this.props.setViewYear}
@@ -61,9 +65,24 @@ export default class DateTimePicker extends Component {
               subtractYear={this.props.subtractYear}
               viewDate={this.props.viewDate}
               viewMode={this.props.viewMode}
+              mode={this.props.mode}
+              calculatePosition = {this.props.calculatePosition}
         />
       </li>
       );
+    }
+  }
+
+  componentWillUpdate = (nextProps, newState) => {
+    this.shouldCalculatePosition = false;
+    if(nextProps.showTimePicker !== this.props.showTimePicker) {
+       this.shouldCalculatePosition = true;
+    }
+  }
+
+  componentDidUpdate = () => {
+    if(this.shouldCalculatePosition) {
+      this.props.calculatePosition();
     }
   }
 
@@ -92,15 +111,23 @@ export default class DateTimePicker extends Component {
       return this.props.mode === Constants.MODE_DATETIME ?
           (
               <li>
-                <span className="btn picker-switch" onClick={this.props.togglePicker} style={{width: "100%"}} ><span className={classnames("glyphicon", this.props.showTimePicker ? "glyphicon-calendar" : "glyphicon-time")} /></span>
+                <span className="btn picker-switch" onClick={this.props.togglePicker} style={{width: "100%"}} ><span className={classNames("glyphicon", this.props.showTimePicker ? "glyphicon-calendar" : "glyphicon-time")} /></span>
+              </li>
+          ) :
+          this.props.mode === Constants.MODE_DATE ?
+          (
+              <li>
+                <span className="btn btn-today" onClick={this.props.setToday} style={{width: "100%"}}>Today</span>
               </li>
           ) :
           null;
   }
 
   render() {
+    const widgetClass = classNames('bootstrap-datetimepicker-widget', 'dropdown-menu', this.props.widgetClasses);
+
     return (
-      <div className={classnames(this.props.widgetClasses)} style={this.props.widgetStyle}>
+      <div className={widgetClass} style={this.props.widgetStyle}>
 
         <ul className="list-unstyled">
 
@@ -117,4 +144,3 @@ export default class DateTimePicker extends Component {
     );
   }
 }
-

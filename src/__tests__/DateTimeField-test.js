@@ -67,11 +67,31 @@ describe("DateTimeField", function() {
     it("doesn't change the defaultText if dateTime didn't change", function() {
       const Parent = createParent({defaultText: "Pick a date"});
       const input = TestUtils.findRenderedDOMComponentWithTag(Parent, "input");
-      expect(input.value).toBe("Pick a date");
+      expect(input.getAttribute('placeholder')).toBe("Pick a date");
       Parent.setState({});
-      expect(input.value).toBe("Pick a date");
+      expect(input.getAttribute('placeholder')).toBe("Pick a date");
     });
 
+    it('should call the onChange callback', function () {
+      const onChangeMock = jest.genMockFunction();
+      const Parent = createParent({onChange: onChangeMock});
+      const input = TestUtils.findRenderedDOMComponentWithTag(Parent, "input");
+      input.value = "2:13 AM";
+      TestUtils.Simulate.change(input);
+
+      expect(onChangeMock.mock.calls.length).toBe(1);
+    })
+
+    it('should call the onBlur callback', function () {
+      const onBlurMock = jest.genMockFunction();
+      const Parent = createParent({onBlur: onBlurMock});
+      const input = TestUtils.findRenderedDOMComponentWithTag(Parent, "input");
+      input.value = "2:13 AM";
+      TestUtils.Simulate.change(input);
+      TestUtils.Simulate.blur(input);
+
+      expect(onBlurMock.mock.calls.length).toBe(1);
+    })
 
   });
 
